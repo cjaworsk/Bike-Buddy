@@ -1,0 +1,151 @@
+/* Container */
+.toolbar-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Hidden file input */
+.file-input-hidden {
+  display: none;
+}
+
+/* Import Route button */
+.import-button {
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.import-button:hover {
+  background-color: #f1f5f9;
+}
+
+/* Route dropdown container */
+.route-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Route button */
+.route-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background-color: #FC5200;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #FEC8A0;
+  cursor: pointer;
+  max-width: 200px;
+  min-width: fit-content;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: background-color 0.2s ease-in-out, transform 0.15s ease-in-out;
+}
+
+.route-button:hover {
+  background-color: #e14b00;
+}
+
+/* Label inside button */
+.route-button-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Dropdown icon */
+.dropdown-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.dropdown-icon.rotate {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 50;
+  min-width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* Dropdown section */
+.dropdown-section {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Checkbox row */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-section:hover {
+    background-color: #f1f5f9;
+}
+
+/* Checkbox input */
+.checkbox-input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Checkbox label */
+.checkbox-label {
+  font-size: 14px;
+  line-height: 1.25;
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Remove route button */
+.remove-route-button {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: #DC2626;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.remove-route-button:hover {
+  background-color: #fef2f2;
+}
+

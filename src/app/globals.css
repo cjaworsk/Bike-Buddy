@@ -1,15 +1,19 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
+ @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --spacing: 2px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +23,185 @@
   }
 }
 
-body {
+html, #_next, body {
   background: var(--background);
-  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Only apply the foreground color to specific elements, not globally */
+body {
+  color: var(--foreground);
+}
+
+/* Allow components to override the body color */
+.component-override {
+  color: initial;
+}
+
+.isSelected {
+    background-color: #82CAFF;
+}
+
+.search-input {
+  box-sizing: border-box;
+}
+
+/* MapToolbar Styles */
+.map-toolbar {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: transparent;
+  border-radius: 12px;
+  //box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 12px 16px;
+  z-index: 10000;
+}
+
+.map-toolbar-search {
+  flex: 1 1 300px;
+  min-width: 250px;
+  max-width: 300px; /* Prevent search from taking too much space */
+}
+
+.map-toolbar-types {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.map-toolbar-buttons {
+  flex-shrink: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.type-button,
+.map-toolbar-buttons button {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);   /* subtle default */
+  transition: box-shadow 0.15s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.type-button:hover,
+.map-toolbar-buttons button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);   /* stronger on hover */
+  transform: translateY(-1px);                /* small lift effect */
+}
+
+/*  Cluster styling */ 
+.custom-cluster {
+  background-color: rgba(0, 123, 255, 0.7);
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 2px solid white;
+}
+
+.cluster-icon {
+  line-height: 1;
+  font-size: 14px;
+}
+
+/* Remove the default glow / outer translucent halo */
+.marker-cluster {
+  background-color: transparent !important; /* kill outer translucent layer */
+  border-radius: 50%; /* ensure it's round */
+}
+
+/* Style the inner cluster circle */
+.marker-cluster div {
+  background-color: #2ecc71 !important; /* or dynamic: yellow/orange/red */
+  border: 2px solid white;
+  border-radius: 50%;
+  color: white;              /* make numbers white */
+  font-weight: bold;         /* easier to read */
+  font-size: 14px;           /* tweak to taste */
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+}
+
+/* More specific selectors */
+.leaflet-marker-icon.marker-cluster.marker-cluster-small div,
+.leaflet-marker-icon.marker-cluster.marker-cluster-medium div,
+.leaflet-marker-icon.marker-cluster.marker-cluster-large div,
+.leaflet-marker-icon.marker-cluster div {
+  background-color: #2ecc71 !important;
+  border: 2px solid white !important;
+  border-radius: 50% !important;
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 10px !important;
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 20px !important; /* slightly less than height for better centering */
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+.leaflet-marker-icon.marker-cluster.marker-cluster-medium div {
+    width: 25px !important;
+    height: 25px !important;
+    line-height: 25px !important;
+}
+
+.leaflet-marker-icon.marker-cluster.marker-cluster-large div {
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+}
+
+.leaflet-marker-icon.marker-cluster div {
+  /* ... other styles ... */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important; /* Reset line-height when using flexbox */
+}
+
+/* Target the parent marker icon container too */
+.leaflet-marker-icon.marker-cluster.marker-cluster-small,
+.leaflet-marker-icon.marker-cluster.marker-cluster-medium,
+.leaflet-marker-icon.marker-cluster.marker-cluster-large,
+.leaflet-marker-icon.marker-cluster {
+  text-align: center !important;
+}
+
+/* Fix for dropdown menu to override global styles */
+.profile-dropdown-menu {
+  background-color: white !important;
+  color: black !important;
+}
+
+.profile-dropdown-menu * {
+  color: inherit !important;
+}
+
+.profile-dropdown-menu .menu-item {
+  background-color: transparent !important;
+  color: black !important;
+  border: transparent;
+}
+
+.profile-dropdown-menu .menu-item:hover {
+  background-color: #D1D5DB !important;
+}
+
+.profile-dropdown-menu .logout-item {
+  color: #dc2626 !important;
+  background-color: inherit;
+}
+
+.profile-dropdown-menu .logout-item:hover {
+  background-color: #fef2f2 !important;
 }

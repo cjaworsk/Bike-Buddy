@@ -1,0 +1,55 @@
+
+.leaflet-marker-icon {
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 2px black);
+}
+
+/* Force Leaflet to use low z-index values */
+.leaflet-pane {
+  z-index: 0 !important;
+}
+
+.leaflet-map-pane {
+    z-index: 0 !important;
+}
+
+.leaflet-tile-pane {
+  z-index: 0 !important;
+}
+
+.leaflet-overlay-pane {
+  z-index: 0 !important;
+}
+
+.leaflet-shadow-pane {
+  z-index: 0 !important;
+}
+
+.leaflet-marker-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-tooltip-pane {
+  z-index: 0 !important;
+}
+
+.leaflet-popup-pane {
+  z-index: 0 !important;
+}
+
+.leaflet-control-container {
+  z-index: 0 !important;
+}
+
+.leaflet-top, 
+.leaflet-bottom {
+  z-index: 0 !important;
+}
+
+.leaflet-control {
+  z-index: 0 !important;
+}
+
+/* Isolate the entire map container */
+.leaflet-container {
+  z-index: 1 !important;
+}
