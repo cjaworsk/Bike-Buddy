@@ -4,9 +4,6 @@ import { PoiFilterProvider } from "@/context/PoiFilterContext";
 
 import "./globals.css";
 import "./leaflet.css";
-import "./searchbox.css";
-import "./typeselector.css";
-import "./mapbutton.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

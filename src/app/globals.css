@@ -2,13 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
- @theme inline {
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -59,7 +58,6 @@ body {
   gap: 20px;
   background-color: transparent;
   border-radius: 12px;
-  //box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   padding: 12px 16px;
   z-index: 10000;
 }
@@ -67,7 +65,7 @@ body {
 .map-toolbar-search {
   flex: 1 1 300px;
   min-width: 250px;
-  max-width: 300px; /* Prevent search from taking too much space */
+  max-width: 300px;
 }
 
 .map-toolbar-types {
@@ -84,17 +82,328 @@ body {
 
 .type-button,
 .map-toolbar-buttons button {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);   /* subtle default */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   transition: box-shadow 0.15s ease-in-out, transform 0.1s ease-in-out;
 }
 
 .type-button:hover,
 .map-toolbar-buttons button:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);   /* stronger on hover */
-  transform: translateY(-1px);                /* small lift effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
 }
 
-/*  Cluster styling */ 
+/* SearchBox Component Styles */
+.search-box {
+  position: relative;
+  flex: 1;
+}
+
+.search-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 10px 8px 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  background-color: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.search-input:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.search-loading {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 14px;
+  animation: search-spin 1s linear infinite;
+}
+
+@keyframes search-spin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 50;
+  max-height: 256px;
+  overflow-y: auto;
+}
+
+.search-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+  background-color: transparent;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.search-item:last-child {
+  border-bottom: none;
+}
+
+.search-item:hover {
+  background-color: #f9fafb;
+}
+
+.search-item.selected {
+  background-color: #eff6ff;
+}
+
+.search-item.selected:hover {
+  background-color: #eff6ff;
+}
+
+.search-item-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.search-item-type {
+  font-size: 12px;
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+.search-highlight {
+  background-color: #dbeafe;
+  color: #1e40af;
+  font-weight: 500;
+}
+
+.search-no-results {
+  padding: 24px 12px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* TypeSelector Button Styles */
+.type-selector-container {
+  display: flex;
+  position: relative;
+  gap: 8px;
+  align-items: center;
+  background: transparent;
+}
+
+.type-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.type-button:hover {
+  background-color: #f1f5f9;
+}
+
+.type-button-icon {
+    padding: 1px 2px 0px 0px;
+    justify-content: center;
+    align-items: center;
+}
+
+.type-button-label {
+    margin: 8px;
+    justify-content: center;
+}
+
+.type-button.isSelected {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.type-button.isSelected:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+/* MapButton Styles */
+.toolbar-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.import-button {
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.import-button:hover {
+  background-color: #f1f5f9;
+}
+
+.route-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.route-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background-color: #FC5200;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #FEC8A0;
+  cursor: pointer;
+  max-width: 200px;
+  min-width: fit-content;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: background-color 0.2s ease-in-out, transform 0.15s ease-in-out;
+}
+
+.route-button:hover {
+  background-color: #e14b00;
+}
+
+.route-button-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.dropdown-icon.rotate {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 50;
+  min-width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.dropdown-section {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-section:hover {
+    background-color: #f1f5f9;
+}
+
+.checkbox-input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  font-size: 14px;
+  line-height: 1.25;
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+.remove-route-button {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: #DC2626;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.remove-route-button:hover {
+  background-color: #fef2f2;
+}
+
+/* Cluster styling */ 
 .custom-cluster {
   background-color: rgba(0, 123, 255, 0.7);
   border-radius: 50%;
@@ -113,18 +422,18 @@ body {
 
 /* Remove the default glow / outer translucent halo */
 .marker-cluster {
-  background-color: transparent !important; /* kill outer translucent layer */
-  border-radius: 50%; /* ensure it's round */
+  background-color: transparent !important;
+  border-radius: 50%;
 }
 
 /* Style the inner cluster circle */
 .marker-cluster div {
-  background-color: #2ecc71 !important; /* or dynamic: yellow/orange/red */
+  background-color: #2ecc71 !important;
   border: 2px solid white;
   border-radius: 50%;
-  color: white;              /* make numbers white */
-  font-weight: bold;         /* easier to read */
-  font-size: 14px;           /* tweak to taste */
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
   width: 20px;
   height: 20px;
   line-height: 20px;
@@ -144,7 +453,7 @@ body {
   font-size: 10px !important;
   width: 20px !important;
   height: 20px !important;
-  line-height: 20px !important; /* slightly less than height for better centering */
+  line-height: 20px !important;
   text-align: center !important;
   box-sizing: border-box !important;
 }
@@ -162,11 +471,10 @@ body {
 }
 
 .leaflet-marker-icon.marker-cluster div {
-  /* ... other styles ... */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  line-height: 1 !important; /* Reset line-height when using flexbox */
+  line-height: 1 !important;
 }
 
 /* Target the parent marker icon container too */
