@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const client = await clientPromise;
-    const db = client.db("bikingbuddy");
+    const db = client.db("bikebuddy");
     const collection = db.collection<POI>("pois");
 
     const { type, south, west, north, east, limit } = req.query;

@@ -4,6 +4,9 @@ import clientPromise from "../src/lib/mongodb.ts";
 import type { POI, POIType } from "../src/types/POI.ts";
 import { fetchOSMPOIs } from "../src/utils/fetchOSMPOIs.ts";
 
+import { config } from "dotenv";
+config({ path: ".env.local" }); // force load .env.local 
+
 const POI_TYPES: POIType[] = ["toilet", "drinking_water", "cafe"];
 
 // Bounding box for California (south, west, north, east)
@@ -37,7 +40,7 @@ function splitBoundingBox(
 
 async function seed() {
   const client = await clientPromise;
-  const db = client.db("bikingbuddy");
+  const db = client.db("bikebuddy");
   const poiCollection = db.collection<POI>("pois");
 
   // Clear existing
