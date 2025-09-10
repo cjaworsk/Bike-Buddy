@@ -1,5 +1,12 @@
-// src/utils/fetchOSMPOIs.ts
 import type { POI, POIType } from "@/types/POI";
+
+interface OverpassElement {
+  id: number;
+  tags?: Record<string, string>;
+  lat?: number;
+  lon?: number;
+  center?: { lat: number; lon: number };
+}
 
 /**
  * Fetch POIs from Overpass API within a bbox.
@@ -40,7 +47,7 @@ export async function fetchOSMPOIs(
   const data = await res.json();
 
   // Normalize into POI objects
-  return data.elements.map((el: any) => ({
+  return (data.elements as OverpassElement[]).map((el) => ({
     osmId: el.id,
     type,
     source: "osm",
@@ -50,6 +57,6 @@ export async function fetchOSMPOIs(
     tags: el.tags ?? {},
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-  })) as POI[];
+  }));
 }
 

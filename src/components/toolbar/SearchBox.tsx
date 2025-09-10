@@ -187,7 +187,7 @@ export default function SearchBox({
           ) : (
             query.length >= 2 && !isLoading && (
               <div className="search-no-results">
-                No results found for "{query}"
+                No results found for &quot;{query}&quot;
               </div>
             )
           )}

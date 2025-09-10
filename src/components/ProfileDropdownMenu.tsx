@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 
+import Image from "next/image";
+
 const ProfileDropdownMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -29,7 +31,7 @@ const ProfileDropdownMenu = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="component-override w-20 h-20 rounded-full overflow-hidden border-3 border-gray-900 shadow-lg hover:border-gray-400 transition-colors"
       >
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
           alt="Profile"
           className="w-full h-full object-cover"
@@ -42,7 +44,7 @@ const ProfileDropdownMenu = () => {
           {/* Profile Header */}
           <div className="p-8 border-b border-gray-100 text-center">
             <div className="w-30 h-30 mx-auto mb-2 rounded-full overflow-hidden">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
                 alt="Profile"
                 className="w-full h-full object-cover"

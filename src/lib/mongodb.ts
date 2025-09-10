@@ -1,23 +1,27 @@
-// src/lib/mongodb.ts
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
 if (!uri) {
-  throw new Error("⚠️ Please define the MONGODB_URI environment variable in your .env.local file");
+  throw new Error(
+    "⚠️ Please define the MONGODB_URI environment variable in your .env.local file"
+  );
 }
 
 const options = {};
 
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
-
-// In dev, reuse the client across hot reloads
-if (!(global as any)._mongoClientPromise) {
-  client = new MongoClient(uri, options);
-  (global as any)._mongoClientPromise = client.connect();
+// Extend the global type so we can store the client promise safely
+declare global {
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-clientPromise = (global as any)._mongoClientPromise;
+// Reuse client across hot reloads in dev, create new in prod
+const clientPromise: Promise<MongoClient> =
+  global._mongoClientPromise ??
+  new MongoClient(uri, options).connect();
+
+if (!global._mongoClientPromise) {
+  global._mongoClientPromise = clientPromise;
+}
 
 export default clientPromise;
 

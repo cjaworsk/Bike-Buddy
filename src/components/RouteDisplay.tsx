@@ -2,11 +2,10 @@ import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
+import { RouteData } from '@/types/RouteData';
+
 interface RouteDisplayProps {
-  routeData: {
-    name: string;
-    points: Array<{lat: number, lon: number}>;
-  } | null;
+    routeData: RouteData | null;
 }
 
 const RouteDisplay = ({ routeData }: RouteDisplayProps) => {

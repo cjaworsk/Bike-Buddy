@@ -14,18 +14,20 @@ import { useCallback, useMemo, useState, useRef } from "react";
 // Components & utils
 import MapBoundsFetcher from "./MapBoundsFetcher";
 import { POI } from "../types/POI";
+import { RouteData } from "@/types/RouteData";
 import { renderPOIMarker } from "../utils/renderPOIMarker";
 import MapToolbar from "./toolbar/MapToolbar";
 import RouteDisplay from "./RouteDisplay";
-import SearchBox from "@/components/toolbar/SearchBox";
 
 // Context
 import { usePoiFilters } from "../context/PoiFilterContext";
 import MapZoomControl from "./MapZoomControl";
 
+
 export default function Map() {
   const [pois, setPois] = useState<POI[]>([]);
-  const [routeData, setRouteData] = useState<any>(null);
+  const [routeData, setRouteData] = useState<RouteData | null>(null);
+  //const [routeData, setRouteData] = useState<any>(null);
   const [showAdjacentPOI, setShowAdjacentPOI] = useState(false);
   const [mapCenter, setMapCenter] = useState<[number, number]>([37.7749, -122.4194]);
   const [mapKey, setMapKey] = useState(0); // Force re-render when center changes
@@ -72,7 +74,7 @@ export default function Map() {
   }, []);
 
   // Handler for when a route is loaded
-  const handleRouteLoad = (loadedRouteData: any) => {
+  const handleRouteLoad = (loadedRouteData: RouteData) => {
     console.log('Route loaded:', loadedRouteData);
     setRouteData(loadedRouteData);
   };

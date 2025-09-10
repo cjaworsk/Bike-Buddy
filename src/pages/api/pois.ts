@@ -1,7 +1,7 @@
-// src/pages/api/pois.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/mongodb";
 import type { POI, POIType } from "@/types/POI";
+import { Filter } from "mongodb";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { type, south, west, north, east, limit } = req.query;
 
     // ---- Build Mongo filter ----
-    const filter: Record<string, any> = {};
+    const filter: Filter<POI> = {}; // ✅ typed filter
 
     // Filter by POI type(s)
     if (type) {

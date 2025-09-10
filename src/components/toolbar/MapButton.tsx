@@ -1,13 +1,15 @@
 import { useRef, useState, useEffect } from 'react';
+import { RouteData } from '@/types/RouteData';
 
 interface MapButtonProps {
-  onRouteLoad?: (routeData: any) => void;
+  onRouteLoad?: (routeData: RouteData) => void;
   onRouteRemove?: () => void;
   onPOIToggle?: (show: boolean) => void;
 }
 
 const MapButton = ({ onRouteLoad, onRouteRemove, onPOIToggle }: MapButtonProps) => {
-  const [routeData, setRouteData] = useState<any>(null);
+  const [routeData, setRouteData] = useState<RouteData | null>(null);
+  //const [routeData, setRouteData] = useState<any>(null);
   const [showAdjacentPOI, setShowAdjacentPOI] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

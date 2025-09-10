@@ -5,8 +5,10 @@ import SearchBox from "./SearchBox"; // Updated import path
 import TypeSelector from "./TypeSelector";
 import MapButton from "./MapButton";
 
+import { RouteData } from "@/types/RouteData";
+
 interface MapToolbarProps {
-  onRouteLoad: (routeData: any) => void;
+  onRouteLoad: (routeData: RouteData) => void;
   onRouteRemove: () => void;
   onPOIToggle: (show: boolean) => void;
   onLocationSelect: (lat: number, lng: number, displayName: string) => void; // New prop
