@@ -1,8 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/app/**/*.{js,ts,jsx,tsx}",      // app router pages
-    "./src/components/**/*.{js,ts,jsx,tsx}" // components
+    "./src/pages/**/*.{js,ts,jsx,tsx}",      // pages router files
+    "./src/app/**/*.{js,ts,jsx,tsx}",        // app router files
+    "./src/components/**/*.{js,ts,jsx,tsx}", // components
   ],
   theme: {
     extend: {},
