@@ -428,7 +428,7 @@ body {
 
 /* Style the inner cluster circle */
 .marker-cluster div {
-  background-color: #2ecc71 !important;
+  background-color: #6C757D !important;
   border: 2px solid white;
   border-radius: 50%;
   color: white;
@@ -445,7 +445,7 @@ body {
 .leaflet-marker-icon.marker-cluster.marker-cluster-medium div,
 .leaflet-marker-icon.marker-cluster.marker-cluster-large div,
 .leaflet-marker-icon.marker-cluster div {
-  background-color: #2ecc71 !important;
+  background-color: #6C757D !important;
   border: 2px solid white !important;
   border-radius: 50% !important;
   color: white !important;

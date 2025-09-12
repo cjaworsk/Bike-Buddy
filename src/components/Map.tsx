@@ -11,6 +11,8 @@ import "@changey/react-leaflet-markercluster/dist/styles.min.css";
 // React hooks
 import { useCallback, useMemo, useState, useRef } from "react";
 
+import { useIsMobile } from "@/hooks/useIsMobile";
+
 // Components & utils
 import MapBoundsFetcher from "./MapBoundsFetcher";
 import { POI } from "../types/POI";
@@ -18,6 +20,7 @@ import { RouteData } from "@/types/RouteData";
 import { renderPOIMarker } from "../utils/renderPOIMarker";
 import MapToolbar from "./toolbar/MapToolbar";
 import RouteDisplay from "./RouteDisplay";
+import MobileToolbar from "./toolbar/MobileToolbar";
 
 // Context
 import { usePoiFilters } from "../context/PoiFilterContext";
@@ -25,6 +28,7 @@ import MapZoomControl from "./MapZoomControl";
 
 
 export default function Map() {
+  const isMobile = useIsMobile();
   const [pois, setPois] = useState<POI[]>([]);
   const [routeData, setRouteData] = useState<RouteData | null>(null);
   //const [routeData, setRouteData] = useState<any>(null);
@@ -117,15 +121,24 @@ export default function Map() {
 
   const markers = useMemo(() => filteredPois.map(poi => renderPOIMarker(poi)), [filteredPois]);
     
-  return (
+ return (
     <>
-      {/* Toolbar floats above map and includes search */}
-      <MapToolbar 
-        onRouteLoad={handleRouteLoad}
-        onRouteRemove={handleRouteRemove}
-        onPOIToggle={handlePOIToggle}
-        onLocationSelect={handleLocationSelect}
-      />
+      {/* Toolbar: desktop vs mobile */}
+      {isMobile ? (
+        <MobileToolbar
+          onRouteLoad={handleRouteLoad}
+          onRouteRemove={handleRouteRemove}
+          onPOIToggle={handlePOIToggle}
+          onLocationSelect={handleLocationSelect}
+        />
+      ) : (
+        <MapToolbar
+          onRouteLoad={handleRouteLoad}
+          onRouteRemove={handleRouteRemove}
+          onPOIToggle={handlePOIToggle}
+          onLocationSelect={handleLocationSelect}
+        />
+      )}
 
       <MapContainer
         key={mapKey} // Force re-render when location changes
@@ -139,7 +152,7 @@ export default function Map() {
           }
         }}
       >
-        <MapZoomControl position="bottomright"/>
+        <MapZoomControl position="bottomright" />
 
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -149,13 +162,17 @@ export default function Map() {
         <MapBoundsFetcher onUpdate={handleBboxUpdate} />
 
         <MarkerClusterGroup
-            maxClusterRadius={(zoom: number) => Math.max(20, 80 - zoom * 3)}
-            disableClusteringAtZoom={16}
-            spiderfyOnMaxZoom={true}
+          maxClusterRadius={(zoom: number) =>
+            isMobile
+              ? Math.max(40, 100 - zoom * 4) // more spaced clusters for small screens
+              : Math.max(20, 80 - zoom * 3) // original desktop config
+          }
+          disableClusteringAtZoom={16}
+          spiderfyOnMaxZoom={true}
         >
-            {markers}
+          {markers}
         </MarkerClusterGroup>
-        
+
         <RouteDisplay routeData={routeData} />
       </MapContainer>
     </>
