@@ -39,6 +39,11 @@ body {
   color: initial;
 }
 
+.mapContainer {
+    height: calc(var(--vh, 1vh) * 100);
+    weidth: 100%;
+}
+
 .isSelected {
     background-color: #82CAFF;
 }

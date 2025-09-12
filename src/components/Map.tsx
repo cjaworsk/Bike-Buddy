@@ -145,7 +145,7 @@ export default function Map() {
         center={mapCenter}
         zoom={13}
         zoomControl={false}
-        style={{ height: "100dvh", width: "100%" }}
+        className="mapContainer"
         ref={(map) => {
           if (map) {
             mapRef.current = map;
