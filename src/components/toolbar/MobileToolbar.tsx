@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FaMapMarkerAlt } from "react-icons/fa";
-import { FiMap, FiLayers, FiFlag } from "react-icons/fi";
+
+import { LuMapPin } from "react-icons/lu";
+import { PiNavigationArrow } from "react-icons/pi";
 import styles from "./MobileToolbar.module.css";
 import { RouteData } from "@/types/RouteData";
 import MobileTypeSelector from "./MobileTypeSelector";
@@ -156,21 +157,19 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
           onClick={handlePOIToggle}
           title="Toggle POI"
         >
-          <FiFlag />
-        </button>
-        <button
-          className={styles.iconButton}
-          onClick={handleRouteLoadClick}
-          title="Route Options"
-        >
-          <FiMap />
-        </button>
-        <button
-          className={styles.iconButton}
-          onClick={() => onRouteRemove()}
-          title="Remove Route"
-        >
-          <FiLayers />
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <LuMapPin />
+            <span style={{ 
+              position: 'absolute', 
+              bottom: '-6px', 
+              fontSize: '8px', 
+              fontWeight: 'bold',
+              color: 'inherit',
+              lineHeight: '1'
+            }}>
+              POI
+            </span>
+          </div>
         </button>
 
         {/* Current location button */}
@@ -179,7 +178,7 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
           onClick={handleCurrentLocation}
           title="Current Location"
         >
-          <FaMapMarkerAlt />
+          <PiNavigationArrow />
         </button>
       </div>
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { usePoiFilters } from "@/context/PoiFilterContext";
 import { POIType } from "@/types/POI";
 import { FaRestroom, FaCoffee } from "react-icons/fa";
@@ -31,14 +31,53 @@ const MobileTypeSelector: React.FC<MobileTypeSelectorProps> = ({
     { key: "cafe", label: "Cafe", icon: FaCoffee },
   ];
 
+  // Colors that match the map markers
+  const getButtonStyle = (key: POIType, isSelected: boolean) => {
+    const colors: Record<POIType, string> = {
+      toilet: "#007BFF",
+      drinking_water: "#20C997", 
+      cafe: "#FF8C00"  // Changed from 'coffee' to 'cafe'
+    };
+
+    return isSelected ? {
+      backgroundColor: colors[key],
+      borderColor: colors[key],
+      color: 'white'
+    } : {};
+  };
+
+  // Close when clicking outside the POI buttons or the flag button
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      
+      // Don't close if clicking on:
+      // - The POI button container or any of its children
+      // - The flag button that opens/closes this menu
+      if (!target.closest(`.${styles.buttonContainer}`) && 
+          !target.closest('[title="Toggle POI"]')) {
+        onClose();
+      }
+    };
+
+    // Use a small delay to avoid immediately closing when the flag button opens the menu
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
     <>
-      {/* Transparent backdrop */}
-      <div className={styles.backdrop} onClick={onClose} />
-      
-      {/* Floating buttons that slide left from the flag */}
+      {/* Floating buttons that slide left from the flag - NO BACKDROP */}
       <div className={styles.buttonContainer}>
         {types.map((typeOption: TypeOption, index) => {
           const { key, label, icon: IconComponent } = typeOption;
@@ -51,7 +90,9 @@ const MobileTypeSelector: React.FC<MobileTypeSelectorProps> = ({
               className={`${styles.floatingButton} ${isSelected ? styles.selected : ''}`}
               style={{
                 // Stagger the animation delay for each button
-                animationDelay: `${index * 0.1}s`
+                animationDelay: `${index * 0.1}s`,
+                // Apply color-specific styling when selected
+                ...getButtonStyle(key, isSelected)
               }}
               title={label}
             >
