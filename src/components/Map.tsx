@@ -149,7 +149,10 @@ export default function Map() {
         ref={(map) => {
           if (map) {
             mapRef.current = map;
-          }
+          }}}
+        style={{  
+            height: 'calc(var(--vh, 1vh) * 100)',
+            width: '100%' 
         }}
       >
         <MapZoomControl position="bottomright" />
