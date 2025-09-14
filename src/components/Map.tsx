@@ -217,7 +217,7 @@ export default function Map() {
             mapRef.current = map;
           }}}
         style={{  
-            height: 'calc(var(--vh, 1vh) * 100)',
+            height: '100dvh',
             width: '100%' 
         }}
       >

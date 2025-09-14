@@ -40,7 +40,7 @@ body {
 }
 
 div.mapContainer {
-    height: calc(var(--vh, 1vh) * 100) !important;
+    height: 100dvh !important;
     width: 100% !important;
 }
 
