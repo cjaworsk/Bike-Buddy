@@ -39,9 +39,9 @@ body {
   color: initial;
 }
 
-.mapContainer {
-    height: calc(var(--vh, 1vh) * 100);
-    width: 100%;
+div.mapContainer {
+    height: calc(var(--vh, 1vh) * 100) !important;
+    width: 100% !important;
 }
 
 .isSelected {
