@@ -9,7 +9,7 @@ import MarkerClusterGroup from "@changey/react-leaflet-markercluster";
 import "@changey/react-leaflet-markercluster/dist/styles.min.css";
 
 // React hooks
-import { useCallback, useMemo, useState, useRef } from "react";
+import { useCallback, useMemo, useState, useRef, useEffect } from "react";
 
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -34,12 +34,49 @@ export default function Map() {
   const [routeData, setRouteData] = useState<RouteData | null>(null);
   //const [routeData, setRouteData] = useState<any>(null);
   const [showAdjacentPOI, setShowAdjacentPOI] = useState(false);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([37.7749, -122.4194]);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([37.7749, -122.4194]); // Fallback center
   const [mapKey, setMapKey] = useState(0); // Force re-render when center changes
+  const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [isLocationLoaded, setIsLocationLoaded] = useState(false);
   const { selectedTypes } = usePoiFilters();
 
   // Ref to access the map instance for programmatic control
   const mapRef = useRef<L.Map | null>(null);
+
+  // Get current location on component mount
+  useEffect(() => {
+    const getCurrentLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            console.log(`📍 Current location found: (${lat}, ${lng})`);
+            
+            setCurrentLocation({ lat, lng });
+            setMapCenter([lat, lng]);
+            setIsLocationLoaded(true);
+            setMapKey(prev => prev + 1); // Force map re-render
+          },
+          (error) => {
+            console.warn("⚠️ Could not get current location:", error.message);
+            // Fallback to default center if geolocation fails
+            setIsLocationLoaded(true);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 60000 // Cache location for 1 minute
+          }
+        );
+      } else {
+        console.warn("⚠️ Geolocation is not supported by this browser");
+        setIsLocationLoaded(true);
+      }
+    };
+
+    getCurrentLocation();
+  }, []);
 
   const handleBboxUpdate = useCallback(
     async ({ south, west, north, east }: { south: number; west: number; north: number; east: number }) => {
@@ -63,7 +100,7 @@ export default function Map() {
 
   // Handler for location search
   const handleLocationSelect = useCallback((lat: number, lng: number, displayName: string) => {
-    console.log(`📍 Moving map to: ${displayName} (${lat}, ${lng})`);
+    console.log(`🔍 Moving map to: ${displayName} (${lat}, ${lng})`);
     
     // Update center and force map re-render to new location
     setMapCenter([lat, lng]);
@@ -72,6 +109,21 @@ export default function Map() {
     // If map instance is available, use setView for smooth transition
     if (mapRef.current) {
       mapRef.current.setView([lat, lng], 13, {
+        animate: true,
+        duration: 1
+      });
+    }
+  }, []);
+
+  // Handler for when current location is found (from toolbar)
+  const handleCurrentLocationFound = useCallback((lat: number, lng: number) => {
+    setCurrentLocation({ lat, lng });
+    setMapCenter([lat, lng]);
+    setMapKey(prev => prev + 1);
+    
+    // If map instance is available, use setView for smooth transition
+    if (mapRef.current) {
+      mapRef.current.setView([lat, lng], 15, {
         animate: true,
         duration: 1
       });
@@ -121,7 +173,18 @@ export default function Map() {
   }, [pois, selectedTypes, showAdjacentPOI, routeData]);
 
   const markers = useMemo(() => filteredPois.map(poi => renderPOIMarker(poi)), [filteredPois]);
-  const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
+
+  // Don't render map until we've attempted to get location
+  if (!isLocationLoaded) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p>Getting your location...</p>
+        </div>
+      </div>
+    );
+  }
 
  return (
     <>
@@ -132,7 +195,7 @@ export default function Map() {
             onRouteRemove={handleRouteRemove}
             onPOIToggle={handlePOIToggle}
             onLocationSelect={handleLocationSelect}
-            onCurrentLocationFound={(lat, lng) => setCurrentLocation({lat, lng})} // Add this
+            onCurrentLocationFound={handleCurrentLocationFound}
         />
       ) : (
         <MapToolbar
@@ -146,7 +209,7 @@ export default function Map() {
       <MapContainer
         key={mapKey} // Force re-render when location changes
         center={mapCenter}
-        zoom={13}
+        zoom={currentLocation ? 15 : 13} // Higher zoom if we have current location
         zoomControl={false}
         className="mapContainer"
         ref={(map) => {
