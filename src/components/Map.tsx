@@ -158,12 +158,6 @@ export default function Map() {
             width: '100%' 
         }}
       >
-        {currentLocation && (
-          <CurrentLocationMarker 
-            lat={currentLocation.lat} 
-            lng={currentLocation.lng} 
-          />
-        )}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
@@ -184,6 +178,12 @@ export default function Map() {
         </MarkerClusterGroup>
 
         <RouteDisplay routeData={routeData} />
+        {currentLocation && (
+          <CurrentLocationMarker 
+            lat={currentLocation.lat} 
+            lng={currentLocation.lng} 
+          />
+        )}
       </MapContainer>
     </>
   );
