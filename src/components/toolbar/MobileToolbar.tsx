@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import { LuMapPin } from "react-icons/lu";
 import { BiCurrentLocation } from "react-icons/bi";
+import { PiNavigationArrow } from "react-icons/pi";
 import styles from "./MobileToolbar.module.css";
 import { RouteData } from "@/types/RouteData";
 import MobileTypeSelector from "./MobileTypeSelector";
@@ -34,35 +35,7 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-  // Get current location on mount for initial map view
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          // Set as initial map view and show blue dot
-          onLocationSelect(latitude, longitude, "Current Location");
-          if (onCurrentLocationFound) {
-            onCurrentLocationFound(latitude, longitude);
-          }
-        },
-        (error) => {
-          console.warn("Could not get initial location:", error);
-          // Fallback to a default location if geolocation fails
-          // You can set this to your preferred default location
-          onLocationSelect(37.7749, -122.4194, "San Francisco, CA"); // Example default
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 300000 // 5 minutes
-        }
-      );
-    } else {
-      // Fallback if geolocation is not supported
-      onLocationSelect(37.7749, -122.4194, "San Francisco, CA"); // Example default
-    }
-  }, [onLocationSelect, onCurrentLocationFound]);
+  // No automatic location detection - only manual via button click
 
   const parseGPX = (gpxText: string) => {
     const parser = new DOMParser();
@@ -149,10 +122,10 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
     setShowPOIMenu(!showPOIMenu);
   };
 
-  /*const handleRouteLoadClick = () => {
+  const handleRouteLoadClick = () => {
     // Toggle the expandable panel instead of directly loading route
     setShowPanel(!showPanel);
-  };*/
+  };
 
   const handleCurrentLocation = () => {
     // Get user's current location
