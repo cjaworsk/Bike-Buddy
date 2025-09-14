@@ -14,6 +14,7 @@ import { useCallback, useMemo, useState, useRef } from "react";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 // Components & utils
+import CurrentLocationMarker from "./CurrentLocationMarker";
 import MapBoundsFetcher from "./MapBoundsFetcher";
 import { POI } from "../types/POI";
 import { RouteData } from "@/types/RouteData";
@@ -24,7 +25,7 @@ import MobileToolbar from "./toolbar/MobileToolbar";
 
 // Context
 import { usePoiFilters } from "../context/PoiFilterContext";
-import MapZoomControl from "./MapZoomControl";
+//import MapZoomControl from "./MapZoomControl";
 
 
 export default function Map() {
@@ -120,16 +121,18 @@ export default function Map() {
   }, [pois, selectedTypes, showAdjacentPOI, routeData]);
 
   const markers = useMemo(() => filteredPois.map(poi => renderPOIMarker(poi)), [filteredPois]);
-    
+  const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
+
  return (
     <>
       {/* Toolbar: desktop vs mobile */}
       {isMobile ? (
         <MobileToolbar
-          onRouteLoad={handleRouteLoad}
-          onRouteRemove={handleRouteRemove}
-          onPOIToggle={handlePOIToggle}
-          onLocationSelect={handleLocationSelect}
+            onRouteLoad={handleRouteLoad}
+            onRouteRemove={handleRouteRemove}
+            onPOIToggle={handlePOIToggle}
+            onLocationSelect={handleLocationSelect}
+            onCurrentLocationFound={(lat, lng) => setCurrentLocation({lat, lng})} // Add this
         />
       ) : (
         <MapToolbar
@@ -155,8 +158,12 @@ export default function Map() {
             width: '100%' 
         }}
       >
-        <MapZoomControl position="bottomright" />
-
+        {currentLocation && (
+          <CurrentLocationMarker 
+            lat={currentLocation.lat} 
+            lng={currentLocation.lng} 
+          />
+        )}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'

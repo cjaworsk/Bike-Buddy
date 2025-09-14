@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 
 import { LuMapPin } from "react-icons/lu";
-import { PiNavigationArrow } from "react-icons/pi";
+import { BiCurrentLocation } from "react-icons/bi";
 import styles from "./MobileToolbar.module.css";
 import { RouteData } from "@/types/RouteData";
 import MobileTypeSelector from "./MobileTypeSelector";
@@ -14,6 +14,7 @@ interface MobileToolbarProps {
   onRouteRemove: () => void;
   onPOIToggle: (show: boolean) => void;
   onLocationSelect: (lat: number, lng: number, displayName: string) => void;
+  onCurrentLocationFound?: (lat: number, lng: number) => void; // New prop for blue dot
 }
 
 const MobileToolbar: React.FC<MobileToolbarProps> = ({
@@ -21,6 +22,7 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
   onRouteRemove,
   //onPOIToggle,
   onLocationSelect,
+  onCurrentLocationFound,
 }) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
@@ -31,6 +33,36 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
     const timer = setTimeout(() => setShowToolbar(true), 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Get current location on mount for initial map view
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // Set as initial map view and show blue dot
+          onLocationSelect(latitude, longitude, "Current Location");
+          if (onCurrentLocationFound) {
+            onCurrentLocationFound(latitude, longitude);
+          }
+        },
+        (error) => {
+          console.warn("Could not get initial location:", error);
+          // Fallback to a default location if geolocation fails
+          // You can set this to your preferred default location
+          onLocationSelect(37.7749, -122.4194, "San Francisco, CA"); // Example default
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000 // 5 minutes
+        }
+      );
+    } else {
+      // Fallback if geolocation is not supported
+      onLocationSelect(37.7749, -122.4194, "San Francisco, CA"); // Example default
+    }
+  }, [onLocationSelect, onCurrentLocationFound]);
 
   const parseGPX = (gpxText: string) => {
     const parser = new DOMParser();
@@ -117,10 +149,10 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
     setShowPOIMenu(!showPOIMenu);
   };
 
-  const handleRouteLoadClick = () => {
+  /*const handleRouteLoadClick = () => {
     // Toggle the expandable panel instead of directly loading route
     setShowPanel(!showPanel);
-  };
+  };*/
 
   const handleCurrentLocation = () => {
     // Get user's current location
@@ -129,6 +161,10 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
         (position) => {
           const { latitude, longitude } = position.coords;
           onLocationSelect(latitude, longitude, "Current Location");
+          // Also notify parent about current location for blue dot
+          if (onCurrentLocationFound) {
+            onCurrentLocationFound(latitude, longitude);
+          }
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -158,7 +194,7 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
           title="Toggle POI"
         >
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LuMapPin />
+            <LuMapPin size={22} style={{ marginTop: '-4px' }} />
             <span style={{ 
               position: 'absolute', 
               bottom: '-6px', 
@@ -178,7 +214,7 @@ const MobileToolbar: React.FC<MobileToolbarProps> = ({
           onClick={handleCurrentLocation}
           title="Current Location"
         >
-          <PiNavigationArrow />
+          <BiCurrentLocation size={25} />
         </button>
       </div>
 
