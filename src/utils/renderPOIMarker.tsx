@@ -1,36 +1,4 @@
-/*import L from "leaflet";
-import { Marker, Popup } from "react-leaflet";
-import { POI } from "../types/POI";
-
-export function renderPOIMarker(poi: POI) {
-  const icon = L.icon({
-    iconUrl:
-      poi.type === "toilet"
-        ? "/toilet.png"
-        : poi.type === "drinking_water"
-        ? "/water.png"
-        : "/coffee.png",
-    iconSize: [25, 25],
-    iconAnchor: [12, 12],
-    popupAnchor: [0, -12],
-  });
-
-  return (
-    <Marker
-      key={poi._id?.toString() || `${poi.osmId}`}
-      position={[poi.lat, poi.lon]}
-      icon={icon}
-    >
-      <Popup>
-        <b>{poi.name}</b>
-        <br />
-        Type: {poi.type}
-      </Popup>
-    </Marker>
-  );
-}*/ 
 import L from "leaflet";
-import { Marker, Popup } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
 import { FaRestroom, FaCoffee } from "react-icons/fa";
 import { MdLocalDrink } from "react-icons/md";
@@ -40,20 +8,20 @@ import { POI } from "../types/POI";
 const iconComponents = {
   toilet: FaRestroom,
   drinking_water: MdLocalDrink,
-  coffee: FaCoffee
+  cafe: FaCoffee  // Changed from 'coffee' to 'cafe' to match your POI type
 };
 
 // Colors for each POI type
 const iconColors = {
   toilet: "#007BFF",
   drinking_water: "#20C997", 
-  coffee: "#FF8C00"
+  cafe: "#FF8C00"  // Changed from 'coffee' to 'cafe' to match your POI type
 };
 
 // Function to create divIcon with React component
-function createDivIcon(poi: POI, size: number = 18): L.DivIcon {
+export function renderPOIMarker(poi: POI, size: number = 18): L.DivIcon {
   const IconComponent = iconComponents[poi.type as keyof typeof iconComponents] || FaCoffee;
-  const color = iconColors[poi.type as keyof typeof iconColors] || iconColors.coffee;
+  const color = iconColors[poi.type as keyof typeof iconColors] || iconColors.cafe;
   
   const iconElement = (
     <div
@@ -83,22 +51,4 @@ function createDivIcon(poi: POI, size: number = 18): L.DivIcon {
     iconAnchor: [size / 2, size / 2],
     popupAnchor: [0, -size / 2],
   });
-}
-
-export function renderPOIMarker(poi: POI) {
-  const icon = createDivIcon(poi);
-  
-  return (
-    <Marker
-      key={poi._id?.toString() || `${poi.osmId}`}
-      position={[poi.lat, poi.lon]}
-      icon={icon}
-    >
-      <Popup>
-        <b>{poi.name}</b>
-        <br />
-        Type: {poi.type}
-      </Popup>
-    </Marker>
-  );
 }

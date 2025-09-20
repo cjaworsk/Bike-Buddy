@@ -1,54 +1,38 @@
-import { useMap } from "react-leaflet";
 import { useEffect, useRef } from "react";
+import { useMap } from "react-leaflet";
+import { usePoiFilters } from "@/context/PoiFilterContext";
 
-interface Props {
-  onUpdate: (params: {
-    south: number;
-    west: number;
-    north: number;
-    east: number;
-  }) => void;
-}
-
-export default function MapBoundsFetcher({ onUpdate }: Props) {
+export default function MapBoundsFetcher({ debounceMs = 300 }: { debounceMs?: number }) {
   const map = useMap();
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastBoundsRef = useRef<string | null>(null);
+  const { fetchPois } = usePoiFilters();
+  const timer = useRef<number | null>(null);
 
   useEffect(() => {
-    const fetchBounds = () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
-      timeoutRef.current = setTimeout(() => {
+    const handle = () => {
+      if (timer.current) window.clearTimeout(timer.current);
+      timer.current = window.setTimeout(() => {
         const bounds = map.getBounds();
-        const newBounds = JSON.stringify({
+        const bbox = {
           south: bounds.getSouth(),
           west: bounds.getWest(),
           north: bounds.getNorth(),
           east: bounds.getEast(),
-        });
-
-        // Prevent redundant calls
-        if (lastBoundsRef.current !== newBounds) {
-          lastBoundsRef.current = newBounds;
-          onUpdate(JSON.parse(newBounds));
-        }
-      }, 300);
+        };
+        fetchPois(bbox);
+      }, debounceMs);
     };
 
-    map.on("moveend", fetchBounds);
-
-    // initial load
-    fetchBounds();
+    map.on("moveend", handle);
+    map.on("zoomend", handle);
+    // initial fetch
+    handle();
 
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      map.off("moveend", fetchBounds);
+      map.off("moveend", handle);
+      map.off("zoomend", handle);
+      if (timer.current) window.clearTimeout(timer.current);
     };
-  }, [map, onUpdate]);
+  }, [map, fetchPois, debounceMs]);
 
   return null;
 }
-

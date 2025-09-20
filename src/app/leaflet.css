@@ -1,9 +1,8 @@
-
+/*
 .leaflet-marker-icon {
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 2px black);
 }
 
-/* Force Leaflet to use low z-index values */
 .leaflet-pane {
   z-index: 0 !important;
 }
@@ -49,7 +48,16 @@
   z-index: 0 !important;
 }
 
-/* Isolate the entire map container */
 .leaflet-container {
   z-index: 1 !important;
 }
+*/ 
+.leaflet-marker-icon {
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 2px black);
+}
+
+/* Only override the container z-index if you need UI elements above the map */
+.leaflet-container {
+  z-index: 1;
+}
+

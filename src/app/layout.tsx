@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { PoiFilterProvider } from "@/context/PoiFilterContext";
 
 import "./globals.css";
-import "./leaflet.css";
+import "leaflet/dist/leaflet.css"; // <-- use leaflet’s own css
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,11 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <PoiFilterProvider>{children}</PoiFilterProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {children} {/* no PoiFilterProvider here */}
       </body>
     </html>
   );
 }
+

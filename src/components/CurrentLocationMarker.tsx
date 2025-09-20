@@ -1,10 +1,6 @@
 import L from "leaflet";
 import { Marker } from "react-leaflet";
-
-interface CurrentLocationMarkerProps {
-  lat: number;
-  lng: number;
-}
+import { useLocationContext } from "@/context/LocationContext";
 
 // Create a simple blue dot icon without animations
 const createCurrentLocationIcon = (size: number = 12): L.DivIcon => {
@@ -25,12 +21,19 @@ const createCurrentLocationIcon = (size: number = 12): L.DivIcon => {
   });
 };
 
-const CurrentLocationMarker: React.FC<CurrentLocationMarkerProps> = ({ lat, lng }) => {
+const CurrentLocationMarker: React.FC = () => {
+  const { currentLocation } = useLocationContext();
+  
+  // Don't render if no location available
+  if (!currentLocation) {
+    return null;
+  }
+
   const icon = createCurrentLocationIcon();
 
   return (
     <Marker
-      position={[lat, lng]}
+      position={[currentLocation.lat, currentLocation.lng]}
       icon={icon}
       zIndexOffset={1000}
     />

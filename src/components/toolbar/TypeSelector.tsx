@@ -10,7 +10,7 @@ interface TypeOption {
 }
 
 export default function TypeSelector() {
-  const { selectedTypes, toggleType } = usePoiFilters();
+  const { activeTypes, toggleType } = usePoiFilters();
 
   // POI Types + Icons (assumes you have these in /public/icons/)
   const types:TypeOption[] = [
@@ -23,7 +23,7 @@ export default function TypeSelector() {
     <div className="type-selector-container">
       {types.map((typeOption: TypeOption) => {
         const { key, label, icon } = typeOption;
-        const isSelected = selectedTypes.includes(key);
+        const isSelected = activeTypes.includes(key);
 
         return (
           <button

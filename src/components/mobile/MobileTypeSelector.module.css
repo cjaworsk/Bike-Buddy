@@ -1,0 +1,62 @@
+/* Container for the drawer buttons */
+.drawerContainer {
+  position: fixed;
+  top: 1rem;
+  right: 5rem; /* Position to the left of the POI button */
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  z-index: 1502; /* Higher than the main container */
+  pointer-events: auto;
+}
+
+/* Individual drawer buttons */
+.drawerButton {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: rgba(240, 240, 240, 0.95);
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  animation: slideInFromRight 0.3s ease-out both;
+}
+
+/* Slide in animation */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Hover state */
+.drawerButton:hover {
+  background: rgba(200, 200, 200, 0.95);
+  transform: scale(1.05);
+}
+
+/* Selected state */
+.drawerButton.selected {
+  background: rgba(0, 123, 255, 0.9);
+  color: white;
+  transform: scale(1.05);
+}
+
+.drawerButton.selected:hover {
+  background: rgba(0, 100, 200, 0.95);
+}
+
+/* Icon styling */
+.icon {
+  font-size: 20px;
+  color: inherit;
+}

@@ -1,13 +1,17 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { AppProviders } from "@/context/AppProviders";
 
 const MapNoSSR = dynamic(() => import("../components/Map"), { ssr: false });
 
 export default function Home() {
   return (
-    <div className="relative h-[100dvh] w-screen">
-      <MapNoSSR />
-    </div>
+    <AppProviders>
+      <div style={{ height: '100dvh', width: '100vw' }}>
+        <MapNoSSR />
+      </div>
+    </AppProviders>
   );
 }
+

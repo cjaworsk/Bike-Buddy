@@ -97,6 +97,10 @@ div.mapContainer {
   transform: translateY(-1px);
 }
 
+.type-colector-container {
+    position: relative;
+}
+
 /* SearchBox Component Styles */
 .search-box {
   position: relative;

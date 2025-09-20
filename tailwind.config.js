@@ -4,6 +4,7 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx}",      // pages router files
     "./src/app/**/*.{js,ts,jsx,tsx}",        // app router files
     "./src/components/**/*.{js,ts,jsx,tsx}", // components
+    "./src/components/toolbar/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},

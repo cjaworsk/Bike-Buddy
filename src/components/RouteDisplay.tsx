@@ -1,64 +1,100 @@
-import { useEffect } from 'react';
-import { useMap } from 'react-leaflet';
-import L from 'leaflet';
+import { useEffect, useRef } from 'react';
+import { useMap } from 'react-leaflet'; 
+import L from 'leaflet'; 
+import { useRoute } from '@/context/RouteContext';
 
-import { RouteData } from '@/types/RouteData';
-
-interface RouteDisplayProps {
-    routeData: RouteData | null;
-}
-
-const RouteDisplay = ({ routeData }: RouteDisplayProps) => {
+const RouteDisplay = () => {
+  const { routeData, showRouteDisplay } = useRoute(); // Get both from same context
   const map = useMap();
+  const layersRef = useRef<{
+    routeLine?: L.Polyline;
+    startMarker?: L.CircleMarker;
+    endMarker?: L.CircleMarker;
+  }>({});
+
+  console.log('RouteDisplay render:', { 
+    showRouteDisplay, 
+    hasRouteData: !!routeData, 
+    coordsLength: routeData?.coordinates?.length 
+  });
 
   useEffect(() => {
-    if (!routeData || routeData.points.length === 0) return;
+    console.log('RouteDisplay useEffect triggered:', { showRouteDisplay, hasRouteData: !!routeData });
 
-    const points = routeData.points;
-    
-    // Create the main route polyline (orange)
-    const routeLine = L.polyline(
-      points.map(p => [p.lat, p.lon]), 
-      {
-        color: '#FC5200', // Strava Orange
-        weight: 4,
-        opacity: 1
+    // Clean up existing layers first
+    const cleanupLayers = () => {
+      if (layersRef.current.routeLine) {
+        console.log('Removing route line');
+        map.removeLayer(layersRef.current.routeLine);
+        layersRef.current.routeLine = undefined;
       }
-    ).addTo(map);
+      if (layersRef.current.startMarker) {
+        console.log('Removing start marker');
+        map.removeLayer(layersRef.current.startMarker);
+        layersRef.current.startMarker = undefined;
+      }
+      if (layersRef.current.endMarker) {
+        console.log('Removing end marker');
+        map.removeLayer(layersRef.current.endMarker);
+        layersRef.current.endMarker = undefined;
+      }
+    };
 
-    // Start marker (green dot)
-    const startMarker = L.circleMarker([points[0].lat, points[0].lon], {
-      radius: 8,
-      fillColor: '#22c55e', // Green
-      color: '#ffffff',
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 1
-    }).addTo(map);
+    // Always clean up first
+    cleanupLayers();
 
-    // End marker (red dot)
-    const endMarker = L.circleMarker([points[points.length - 1].lat, points[points.length - 1].lon], {
-      radius: 8,
-      fillColor: '#ef4444', // Red
-      color: '#ffffff',
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 1
-    }).addTo(map);
+    // Only add layers if we should show the route and have route data
+    if (showRouteDisplay && routeData && routeData.coordinates && routeData.coordinates.length > 0) {
+      console.log('Creating route display elements');
+      const coordinates = routeData.coordinates;
 
-    // Fit map bounds to show entire route
-    const group = new L.FeatureGroup([routeLine, startMarker, endMarker]);
-    map.fitBounds(group.getBounds(), { padding: [20, 20] });
+      // Create and store new layers
+      layersRef.current.routeLine = L.polyline(coordinates, {
+        color: '#FC5200', 
+        weight: 4, 
+        opacity: 1 
+      }).addTo(map);
+      console.log('Added route line to map');
+
+      layersRef.current.startMarker = L.circleMarker(coordinates[0], {
+        radius: 8,
+        fillColor: '#22c55e',
+        color: '#ffffff',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 1
+      }).addTo(map);
+      console.log('Added start marker to map');
+
+      layersRef.current.endMarker = L.circleMarker(coordinates[coordinates.length - 1], {
+        radius: 8,
+        fillColor: '#ef4444',
+        color: '#ffffff',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 1
+      }).addTo(map);
+      console.log('Added end marker to map');
+
+      // Only fit bounds when route first loads
+      const group = new L.FeatureGroup([
+        layersRef.current.routeLine, 
+        layersRef.current.startMarker, 
+        layersRef.current.endMarker
+      ]);
+      map.fitBounds(group.getBounds(), { padding: [20, 20] });
+    } else {
+      console.log('Not showing route - showRouteDisplay:', showRouteDisplay, 'hasData:', !!routeData);
+    }
 
     // Cleanup function
     return () => {
-      map.removeLayer(routeLine);
-      map.removeLayer(startMarker);
-      map.removeLayer(endMarker);
+      console.log('Cleaning up route display elements on unmount');
+      cleanupLayers();
     };
-  }, [map, routeData]);
+  }, [map, routeData, showRouteDisplay]);
 
-  return null; // This component doesn't render anything directly
+  return null;
 };
 
 export default RouteDisplay;
