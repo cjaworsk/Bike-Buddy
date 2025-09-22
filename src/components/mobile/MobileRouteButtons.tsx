@@ -3,16 +3,15 @@
 import React from 'react';
 import { FaMap, FaMapMarkedAlt } from 'react-icons/fa';
 import { useRoute } from '@/context/RouteContext';
+import { usePoiFilters } from '@/context/PoiFilterContext';
 import styles from './MobileInterface.module.css';
 
 export default function MobileRouteButtons() {
-  const { 
-    routeData, 
-    showAdjacentPOIs, 
-    toggleAdjacentPOIs,
-    showRouteDisplay,
-    toggleRouteDisplay 
-  } = useRoute();
+  // Get route display from RouteContext
+  const { routeData, showRouteDisplay, toggleRouteDisplay } = useRoute();
+  
+  // Get POI filtering from PoiFilterContext
+  const { showAdjacentPOIs, toggleAdjacentPOIs } = usePoiFilters();
 
   // Don't show buttons if no route is loaded
   if (!routeData) return null;

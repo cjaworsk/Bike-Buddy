@@ -15,6 +15,7 @@
   position: fixed;
   left: 1rem;
   right: 1rem;
+  bottom: 0;
   background: white;
   border-radius: 12px 12px 0 0;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
@@ -27,18 +28,19 @@
 
 /* Panel states */
 .panel.collapsed {
-  bottom: 1rem;
-  height: 60px;
+  bottom: 4px;
+  height: 80px;
+  border-radius: 12px;
 }
 
 .panel.search {
-  bottom: 1rem;
+  bottom: 0;
   height: 50vh;
   max-height: 400px;
 }
 
 .panel.expanded {
-  bottom: 1rem;
+  bottom: 0rem;
   height: 70vh;
   max-height: 600px;
 }
