@@ -6,17 +6,15 @@ interface RouteContextType {
   routeData: RouteData | null;
   loadRoute: (route: RouteData) => void;
   removeRoute: () => void;
-  showAdjacentPOIs: boolean;
-  toggleAdjacentPOIs: () => void;
   showRouteDisplay: boolean;
   toggleRouteDisplay: () => void;
+  // Remove showAdjacentPOIs - it belongs in PoiFilterContext
 }
 
 const RouteContext = createContext<RouteContextType | undefined>(undefined);
 
 export const RouteProvider = ({ children }: { children: React.ReactNode }) => {
   const [routeData, setRouteData] = useState<RouteData | null>(null);
-  const [showAdjacentPOIs, setShowAdjacentPOIs] = useState(false);
   const [showRouteDisplay, setShowRouteDisplay] = useState(true);
 
   const loadRoute = (route: RouteData) => {
@@ -29,8 +27,6 @@ export const RouteProvider = ({ children }: { children: React.ReactNode }) => {
     setShowRouteDisplay(false);
   };
   
-  const toggleAdjacentPOIs = () => setShowAdjacentPOIs((prev) => !prev);
-  
   const toggleRouteDisplay = () => {
     console.log('RouteContext toggleRouteDisplay called, current:', showRouteDisplay);
     setShowRouteDisplay((prev) => !prev);
@@ -42,8 +38,6 @@ export const RouteProvider = ({ children }: { children: React.ReactNode }) => {
         routeData,
         loadRoute,
         removeRoute,
-        showAdjacentPOIs,
-        toggleAdjacentPOIs,
         showRouteDisplay,
         toggleRouteDisplay,
       }}

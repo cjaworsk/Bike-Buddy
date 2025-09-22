@@ -58,6 +58,17 @@
 
 /* Only override the container z-index if you need UI elements above the map */
 .leaflet-container {
+  position: relative;
   z-index: 1;
+}
+
+.leaflet-control-attribution {
+  position: relative !important;
+  top: 0;
+  left: 0;
+  background: rgba(255,255,255,0.6); /* fade into background */
+  font-size: 11px;
+  z-index: 1000;
+  pointer-events: none; /* make it non-interactive if you like */
 }
 

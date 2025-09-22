@@ -5,10 +5,14 @@ import { usePoiFilters } from "@/context/PoiFilterContext";
 import { renderPOIMarker } from "@/utils/renderPOIMarker";
 
 export function PoiLayer() {
-  const { filteredPois } = usePoiFilters();
+  const { filteredPois, showAdjacentPOIs } = usePoiFilters();
 
   return (
-    <MarkerClusterGroup chunkedLoading>
+    <MarkerClusterGroup
+      key={showAdjacentPOIs ? "adjacent" : "clustered"} // re-mount when toggled
+      chunkedLoading
+      maxClusterRadius={showAdjacentPOIs ? 1 : 80} // 1px = only overlaps cluster
+    >
       {filteredPois.map((poi) => (
         <Marker
           key={poi._id?.toString() || poi.osmId.toString()}
@@ -21,3 +25,4 @@ export function PoiLayer() {
     </MarkerClusterGroup>
   );
 }
+

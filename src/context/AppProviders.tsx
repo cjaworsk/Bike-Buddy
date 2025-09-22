@@ -3,16 +3,19 @@ import { ReactNode } from "react";
 import { LocationProvider } from "./LocationContext";
 import { RouteProvider } from "./RouteContext";
 import { PoiFilterProvider } from "./PoiFilterContext";
+import { MobileUIProvider } from "./MobileUIContext";
 
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
-    <LocationProvider>
-      <RouteProvider>
-        <PoiFilterProvider>
+    <RouteProvider>
+      <PoiFilterProvider>  {/* Must be INSIDE RouteProvider */}
+        <LocationProvider>
+          <MobileUIProvider>
             {children}
-        </PoiFilterProvider>
-      </RouteProvider>
-    </LocationProvider>
+        </MobileUIProvider>
+      </LocationProvider>
+    </PoiFilterProvider>
+  </RouteProvider>
   );
 }
 

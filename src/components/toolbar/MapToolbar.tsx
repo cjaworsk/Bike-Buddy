@@ -1,13 +1,13 @@
 "use client";
-import { useRoute } from "@/context/RouteContext";
 import { useLocationContext } from "@/context/LocationContext";
+import { usePoiFilters } from "@/context/PoiFilterContext";
 import TypeSelector from "@/components/toolbar/TypeSelector";
 import SearchBox from "@/components/toolbar/SearchBox";
 import { MapButton } from "@/components/toolbar/MapButton";
 
 export function MapToolbar() {
-  const { toggleAdjacentPOIs } = useRoute();
   const { onLocationSelect } = useLocationContext();
+  const { toggleAdjacentPOIs, showAdjacentPOIs } = usePoiFilters();
 
   return (
     <div className="map-toolbar">
@@ -17,8 +17,9 @@ export function MapToolbar() {
       {/* Toggle show adjacent POIs */}
       <button
         onClick={toggleAdjacentPOIs}
-        className="import-button">
-        Toggle Adjacent POIs
+        className={`import-button ${showAdjacentPOIs ? 'bg-green-500 text-white' : 'bg-white'}`}
+      >
+        {showAdjacentPOIs ? 'Show All POIs' : 'Show Route POIs'}
       </button>
 
       {/* Type filter selector */}
@@ -29,4 +30,3 @@ export function MapToolbar() {
     </div>
   );
 }
-

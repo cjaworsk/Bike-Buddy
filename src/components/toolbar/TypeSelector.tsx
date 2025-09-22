@@ -10,34 +10,44 @@ interface TypeOption {
 }
 
 export default function TypeSelector() {
-  const { activeTypes, toggleType } = usePoiFilters();
+  const { activeTypes, toggleType, filteredPois } = usePoiFilters();
 
   // POI Types + Icons (assumes you have these in /public/icons/)
-  const types:TypeOption[] = [
+  const types: TypeOption[] = [
     { key: "toilet", label: "Toilets", icon: "/toilet.png" },
     { key: "drinking_water", label: "Water", icon: "/water.png" },
     { key: "cafe", label: "Cafe", icon: "/coffee.png" },
   ];
+
+  // Count POIs by type for display
+  const getTypeCount = (type: POIType): number => {
+    return filteredPois.filter(poi => poi.type === type).length;
+  };
 
   return (
     <div className="type-selector-container">
       {types.map((typeOption: TypeOption) => {
         const { key, label, icon } = typeOption;
         const isSelected = activeTypes.includes(key);
+        const count = getTypeCount(key);
 
         return (
           <button
             key={key}
             onClick={() => toggleType(key)}
             className={`type-button ${isSelected ? 'isSelected' : ''}`}
+            title={`${label}: ${count} visible`}
           >
-            <Image className="type-button-icon"
+            <Image 
+              className="type-button-icon"
               src={icon}
               alt={label}
               width={20}
               height={20}
             />
-            <span className="type-button-label"> {label}</span>
+            <span className="type-button-label">
+              {label} ({count})
+            </span>
           </button>
         );
       })}
