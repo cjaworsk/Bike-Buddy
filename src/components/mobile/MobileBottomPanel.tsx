@@ -2,29 +2,36 @@ import React, { useState, useRef } from "react";
 import { useRoute } from "@/context/RouteContext";
 import { useLocationContext } from "@/context/LocationContext";
 import { useMobileRouteUpload } from "@/hooks/useMobileRouteUpload";
+import { useLocationSearch } from "@/hooks/useLocationSearch";
 import { BiSearch } from "react-icons/bi";
 import styles from "./MobileBottomPanel.module.css";
 
 type PanelState = "collapsed" | "search" | "expanded";
 
-// Define the interface
-interface SearchResult {
-  id: number;
-  lat: number;
-  lng: number;
-  name: string;
-  address?: string;
-  type?: string;
-}
-
 export default function MobileBottomPanel() {
   const [panelState, setPanelState] = useState<PanelState>("collapsed");
-  const [searchQuery, setSearchQuery] = useState("");
-  //const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const { removeRoute } = useRoute();
   const { onLocationSelect } = useLocationContext();
   const { handleFileUpload, error, clearError } = useMobileRouteUpload();
+  
+  // Use the location search hook
+  const {
+    query,
+    setQuery,
+    results,
+    isLoading,
+    selectedIndex,
+    setSelectedIndex,
+    handleResultSelect: hookHandleResultSelect,
+    formatDisplayName,
+    highlightText
+  } = useLocationSearch({
+    onLocationSelect: (lat, lng, displayName) => {
+      onLocationSelect(lat, lng, displayName);
+      setQuery(displayName.split(',')[0]);
+      setPanelState("collapsed");
+    }
+  });
   
   // Touch/drag handling for slide up gesture
   const panelRef = useRef<HTMLDivElement>(null);
@@ -57,41 +64,42 @@ export default function MobileBottomPanel() {
     setPanelState("search");
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    
-    if (query.length > 2) {
-      // Simulate search results - replace with actual search API
-      setSearchResults([
-        { id: 1, name: "Starbucks Coffee", address: "123 Main St", lat: 37.7749, lng: -122.4194 },
-        { id: 2, name: "Golden Gate Park", address: "San Francisco, CA", lat: 37.7694, lng: -122.4862 }
-      ]);
-    } else {
-      setSearchResults([]);
-    }
-  };
-
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      // Handle search submission
-      console.log("Search submitted:", searchQuery);
+    if (results.length > 0) {
+      hookHandleResultSelect(results[0]);
     }
   };
 
-  const handleResultSelect = (result: SearchResult) => {
-    onLocationSelect(result.lat, result.lng, result.name);
-    setSearchQuery(result.name);
-    setSearchResults([]);
-    setPanelState("collapsed");
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setSelectedIndex(selectedIndex < results.length - 1 ? selectedIndex + 1 : 0);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : results.length - 1);
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (selectedIndex >= 0 && results[selectedIndex]) {
+          hookHandleResultSelect(results[selectedIndex]);
+        } else if (results.length > 0) {
+          hookHandleResultSelect(results[0]);
+        }
+        break;
+      case "Escape":
+        setPanelState("collapsed");
+        setQuery("");
+        break;
+    }
   };
 
   const handleBackdropClick = () => {
     if (panelState !== "collapsed") {
       setPanelState("collapsed");
-      setSearchQuery("");
-      setSearchResults([]);
+      setQuery("");
     }
   };
 
@@ -118,28 +126,44 @@ export default function MobileBottomPanel() {
             <BiSearch className={styles.searchIcon} />
             <input
               type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               onFocus={handleSearchFocus}
+              onKeyDown={handleKeyDown}
               placeholder="Search for places..."
               className={styles.searchInput}
             />
+            {isLoading && (
+              <div className={styles.searchLoading}>⟳</div>
+            )}
           </form>
         </div>
 
         {/* Search Results - Shown in search state */}
-        {panelState === "search" && searchResults.length > 0 && (
+        {panelState === "search" && results.length > 0 && (
           <div className={styles.searchResults}>
-            {searchResults.map((result) => (
+            {results.map((result, index) => (
               <button
-                key={result.id}
-                onClick={() => handleResultSelect(result)}
-                className={styles.searchResult}
+                key={result.place_id}
+                onClick={() => hookHandleResultSelect(result)}
+                onMouseEnter={() => setSelectedIndex(index)}
+                className={`${styles.searchResult} ${index === selectedIndex ? styles.selectedResult : ''}`}
               >
-                <div className={styles.resultName}>{result.name}</div>
-                <div className={styles.resultAddress}>{result.address}</div>
+                <div className={styles.resultName}>
+                  {highlightText(formatDisplayName(result.display_name), query)}
+                </div>
+                <div className={styles.resultAddress}>
+                  {result.type.replace('_', ' ')}
+                </div>
               </button>
             ))}
+          </div>
+        )}
+
+        {/* No Results Message */}
+        {panelState === "search" && query.length >= 2 && !isLoading && results.length === 0 && (
+          <div className={styles.noResults}>
+            {`No results found for "${query}"`}
           </div>
         )}
 

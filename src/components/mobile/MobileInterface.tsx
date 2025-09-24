@@ -8,17 +8,22 @@ import MobileLocationButton from "./MobileLocationButton";
 import MobileBottomPanel from "./MobileBottomPanel";
 import MobilePOIButton from "./MobilePOIButton";
 import MobileRouteButtons from "./MobileRouteButtons";
+import MobileRoutePanel from "./MobileRoutePanel";
 
 function MobileInterfaceInner() {
   const [showToolbar, setShowToolbar] = useState(false);
 
   // Show toolbar after delay
   useEffect(() => {
-    const timer = setTimeout(() => setShowToolbar(true), 1000);
+    const timer = setTimeout(() => {
+      setShowToolbar(true);
+    }, 1000);
     return () => clearTimeout(timer);
   }, []);
 
-  if (!showToolbar) return null;
+  if (!showToolbar) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>
@@ -35,14 +40,19 @@ function MobileInterfaceInner() {
 
       {/* Bottom Panel */}
       <MobileBottomPanel />
+      
+      {/* Route Panel */}
+      <MobileRoutePanel />
     </div>
   );
 }
 
-export const MobileInterface: React.FC = () => {
+const MobileInterface: React.FC = () => {
   return (
     <MobileUIProvider>
       <MobileInterfaceInner />
     </MobileUIProvider>
   );
 };
+
+export default MobileInterface;

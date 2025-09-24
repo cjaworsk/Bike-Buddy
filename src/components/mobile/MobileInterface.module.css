@@ -66,17 +66,72 @@
 }
 
 .routePanel {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  padding: 1rem;
-  z-index: 1500;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 2000; /* Increased from 1500 */
+  max-height: 60vh;
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: auto; /* Ensure panel itself can be clicked */
 }
 
 .routePanelContent h4 {
   margin: 0 0 1rem 0;
   font-size: 16px;
   font-weight: 600;
+}
+
+.routePanelContent {
+  padding: 16px;
+  overflow-y: auto;
+  max-height: inherit;
+  pointer-events: auto;
+}
+
+.routePanelContent * {
+  pointer-events: auto;
+}
+
+.sectionTitle {
+    color: #666;
+}
+
+/* Custom File Upload Styling */
+.customFileUpload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.fileUploadButton {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.fileUploadButton:hover {
+  border-color: #007bff;
+  background: #f0f8ff;
+  color: #007bff;
+}
+
+.fileName {
+  font-size: 12px;
+  color: #666;
+  padding-left: 4px;
+  font-style: italic;
 }
 
 .fileInput {
@@ -132,30 +187,21 @@
 }
 
 .routeButton {
+  background: rgba(240, 240, 240, 0.95);
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  background-color: white;
-  border: 1px solid #d1d5db; /* gray-300 */
-  color: #6b7280; /* gray-600 */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-  cursor: pointer;
 }
 
 .routeButton:hover {
   background-color: #f9fafb; /* gray-50 */
-}
-
-.routeButton:first-child {
-  border-radius: 8px 8px 0 0;
-}
-
-.routeButton:last-child {
-  border-radius: 0 0 8px 8px;
-  border-top: none;
 }
 
 .routeButtonActive {
@@ -169,4 +215,67 @@
   height: 1px;
   background-color: #d1d5db; /* gray-300 */
   margin: 0;
+}
+
+/* Toggle Buttons Row */
+.toggleButtonsRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.toggleButton {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggleButton:hover {
+  background: #f8f9fa;
+}
+
+.toggleButtonActive {
+  background: #007bff !important;
+  color: white !important;
+  border-color: #007bff !important;
+}
+
+.toggleButtonActive:hover {
+  background: #0056b3 !important;
+}
+
+/* Route Panel */
+.routePanel {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  background: white;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1500;
+  max-height: 60vh;
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.routePanelContent {
+  padding: 16px;
+  overflow-y: auto;
+  max-height: inherit;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }

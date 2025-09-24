@@ -9,9 +9,9 @@ import { PoiLayer } from "./PoiLayer";
 import MapBoundsFetcher from "./MapBoundsFetcher";
 import MapRefHandler from "./MapRefHandler";
 import { MapToolbar } from "./toolbar/MapToolbar";
-import { MobileInterface } from "./mobile/MobileInterface";
+import MobileInterface from "./mobile/MobileInterface";
 
-export default function Map() {
+export default function Map(){
   const { mapCenter } = useLocationContext();
   const isMobile = useIsMobile();
 

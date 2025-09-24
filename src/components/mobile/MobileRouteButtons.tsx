@@ -1,42 +1,32 @@
 "use client";
 
 import React from 'react';
-import { FaMap, FaMapMarkedAlt } from 'react-icons/fa';
-import { useRoute } from '@/context/RouteContext';
-import { usePoiFilters } from '@/context/PoiFilterContext';
+import { FaRoute } from 'react-icons/fa';
+//import { useRoute } from '@/context/RouteContext';
+import { useMobileUI } from '@/context/MobileUIContext';
 import styles from './MobileInterface.module.css';
 
 export default function MobileRouteButtons() {
-  // Get route display from RouteContext
-  const { routeData, showRouteDisplay, toggleRouteDisplay } = useRoute();
+  // Get route data from RouteContext
+  //const { routeData } = useRoute();
   
-  // Get POI filtering from PoiFilterContext
-  const { showAdjacentPOIs, toggleAdjacentPOIs } = usePoiFilters();
+  // Get UI state from MobileUIContext
+  const { toggleRoutePanel, routePanelOpen } = useMobileUI();
 
-  // Don't show buttons if no route is loaded
-  if (!routeData) return null;
+  console.log('MobileRouteButtons render - routePanelOpen:', routePanelOpen);
 
+  // Always show the single route button
   return (
     <div className={styles.routeButtons}>
-      {/* Route Display Toggle Button */}
       <button
-        onClick={toggleRouteDisplay}
-        className={`${styles.routeButton} ${showRouteDisplay ? styles.routeButtonActive : ''}`}
-        title={showRouteDisplay ? 'Hide Route' : 'Show Route'}
+        onClick={() => {
+          console.log('Route button clicked, current state:', routePanelOpen);
+          toggleRoutePanel();
+        }}
+        className={`${styles.routeButton} ${routePanelOpen ? styles.routeButtonActive : ''}`}
+        title="Route Options"
       >
-        <FaMap size={16} />
-      </button>
-
-      {/* Separator line */}
-      <div className={styles.routeButtonSeparator} />
-
-      {/* Adjacent POIs Toggle Button */}
-      <button
-        onClick={toggleAdjacentPOIs}
-        className={`${styles.routeButton} ${showAdjacentPOIs ? styles.routeButtonActive : ''}`}
-        title={showAdjacentPOIs ? 'Show All POIs' : 'Show Only Adjacent POIs'}
-      >
-        <FaMapMarkedAlt size={16} />
+        <FaRoute size={16} />
       </button>
     </div>
   );

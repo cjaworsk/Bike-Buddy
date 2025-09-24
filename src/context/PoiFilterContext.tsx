@@ -122,15 +122,15 @@ export function PoiFilterProvider({ children }: { children: ReactNode }) {
   // Get route data from RouteContext (only routeData)
   const { routeData } = useRoute();
   
-  console.log('PoiFilterProvider render - showAdjacentPOIs:', showAdjacentPOIs, 'hasRoute:', !!routeData);
-  
-  // Track showAdjacentPOIs changes
-  useEffect(() => {
-    console.log('showAdjacentPOIs changed to:', showAdjacentPOIs);
-  }, [showAdjacentPOIs]);
+
+    // Watch for route changes and reset adjacent filter when route is removed
+    useEffect(() => {
+        if (!routeData && showAdjacentPOIs) {
+        setShowAdjacentPOIs(false);
+        }
+    }, [routeData, showAdjacentPOIs]);
   
   const toggleAdjacentPOIs = () => {
-    console.log('PoiFilterContext toggleAdjacentPOIs called, current:', showAdjacentPOIs);
     setShowAdjacentPOIs(prev => !prev);
   };
 
@@ -164,9 +164,6 @@ const fetchPois = useCallback(async (bbox: BoundingBox) => {
     }
 
     const { added, removed } = await response.json();
-    console.log(
-      `POI diff -> added: ${added.length}, removed: ${removed.length}`
-    );
 
     setPois((prev) => {
       const removedIds = new Set(removed.map((p: POI) => p._id?.toString()));
@@ -200,11 +197,8 @@ const fetchPois = useCallback(async (bbox: BoundingBox) => {
     if (showAdjacentPOIs) {
       const isAdjacent = isNearRoute(currentPoi, routeData, 200); // 200m tolerance
       if (!isAdjacent) {
-        console.log(`POI ${currentPoi.name} is too far from route, filtering out`);
         return false;
-      } else {
-        console.log(`POI ${currentPoi.name} is within 200m of route, keeping`);
-      }
+      } 
     }
     
     return true;

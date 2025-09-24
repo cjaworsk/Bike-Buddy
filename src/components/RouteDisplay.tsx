@@ -12,29 +12,19 @@ const RouteDisplay = () => {
     endMarker?: L.CircleMarker;
   }>({});
 
-  console.log('RouteDisplay render:', { 
-    showRouteDisplay, 
-    hasRouteData: !!routeData, 
-    coordsLength: routeData?.coordinates?.length 
-  });
-
   useEffect(() => {
-    console.log('RouteDisplay useEffect triggered:', { showRouteDisplay, hasRouteData: !!routeData });
 
     // Clean up existing layers first
     const cleanupLayers = () => {
       if (layersRef.current.routeLine) {
-        console.log('Removing route line');
         map.removeLayer(layersRef.current.routeLine);
         layersRef.current.routeLine = undefined;
       }
       if (layersRef.current.startMarker) {
-        console.log('Removing start marker');
         map.removeLayer(layersRef.current.startMarker);
         layersRef.current.startMarker = undefined;
       }
       if (layersRef.current.endMarker) {
-        console.log('Removing end marker');
         map.removeLayer(layersRef.current.endMarker);
         layersRef.current.endMarker = undefined;
       }
@@ -45,7 +35,6 @@ const RouteDisplay = () => {
 
     // Only add layers if we should show the route and have route data
     if (showRouteDisplay && routeData && routeData.coordinates && routeData.coordinates.length > 0) {
-      console.log('Creating route display elements');
       const coordinates = routeData.coordinates;
 
       // Create and store new layers
@@ -54,7 +43,6 @@ const RouteDisplay = () => {
         weight: 4, 
         opacity: 1 
       }).addTo(map);
-      console.log('Added route line to map');
 
       layersRef.current.startMarker = L.circleMarker(coordinates[0], {
         radius: 8,
@@ -64,7 +52,6 @@ const RouteDisplay = () => {
         opacity: 1,
         fillOpacity: 1
       }).addTo(map);
-      console.log('Added start marker to map');
 
       layersRef.current.endMarker = L.circleMarker(coordinates[coordinates.length - 1], {
         radius: 8,
@@ -74,7 +61,6 @@ const RouteDisplay = () => {
         opacity: 1,
         fillOpacity: 1
       }).addTo(map);
-      console.log('Added end marker to map');
 
       // Only fit bounds when route first loads
       const group = new L.FeatureGroup([

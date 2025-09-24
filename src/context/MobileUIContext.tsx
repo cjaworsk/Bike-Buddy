@@ -14,6 +14,9 @@ interface MobileUIContextType {
   setShowPOIMenu: (show: boolean) => void;
   togglePOIMenu: () => void;
   drawerRef: React.RefObject<HTMLDivElement | null>;
+  routePanelOpen: boolean;
+  setRoutePanelOpen: (open: boolean) => void;
+  toggleRoutePanel: () => void;
 }
 
 const MobileUIContext = createContext<MobileUIContextType | undefined>(undefined);
@@ -28,7 +31,11 @@ export function useMobileUI() {
 
 export function MobileUIProvider({ children }: { children: ReactNode }) {
   const [showPOIMenu, setShowPOIMenu] = useState(false);
+  const [routePanelOpen, setRoutePanelOpen] = useState(false);
+  
   const togglePOIMenu = () => setShowPOIMenu((prev) => !prev);
+  const toggleRoutePanel = () => setRoutePanelOpen((prev) => !prev);
+  
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,7 +62,15 @@ export function MobileUIProvider({ children }: { children: ReactNode }) {
 
   return (
     <MobileUIContext.Provider
-      value={{ showPOIMenu, setShowPOIMenu, togglePOIMenu, drawerRef }}
+      value={{ 
+        showPOIMenu, 
+        setShowPOIMenu, 
+        togglePOIMenu, 
+        drawerRef,
+        routePanelOpen,
+        setRoutePanelOpen,
+        toggleRoutePanel
+      }}
     >
       {children}
     </MobileUIContext.Provider>
