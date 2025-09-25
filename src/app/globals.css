@@ -37,6 +37,13 @@ html, #_next, body {
 /* Only apply the foreground color to specific elements, not globally */
 body {
   color: var(--foreground);
+  height: 100%;
+  overflow: hidden;
+}
+
+html {
+    height: 100dvh;
+    
 }
 
 /* Allow components to override the body color */
@@ -47,6 +54,7 @@ body {
 div.mapContainer {
     height: 100dvh !important;
     width: 100% !important;
+    overflow-y: auto;
 }
 
 .isSelected {
