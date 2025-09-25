@@ -1,3 +1,5 @@
+"use client";
+
 import dynamic from "next/dynamic";
 import { AppProviders } from "@/context/AppProviders";
 import { useKeyboardHandler } from "@/hooks/useKeyboardHandler";
